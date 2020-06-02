@@ -10,7 +10,7 @@ library(kableExtra)
 
 # Daten einlesen aus Excel Datei
 
-if (file.exists("data/Daten.xlsx")) {
+if (file.exists("../data/Daten.xlsx")) {
   df <- read_excel("../data/Daten.xlsx")
 } else{
   df <- mpg
