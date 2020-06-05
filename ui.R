@@ -90,7 +90,7 @@ ui <- fluidPage(
         mainPanel(
             tabsetPanel(type = "pill",
                         tabPanel("Plot",
-                            br(),
+                            #br(),
                             plotOutput("plotGenerator")   
                         ),
                         tabPanel("Tabelle",

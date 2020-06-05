@@ -34,15 +34,15 @@ shinyServer(function(input, output, session) {
         palette     <- input$inputSelect_palette
         
         # Datentypen der Variablen bestimmen
-        classVar1 <- df[input$inputSelect_Var1]  %>% pull(1) %>% typeof()
+        var1Num <- input$inputSelect_Var1 %in% names(df %>% select_if(is.numeric))
         if (input$inputSelect_Var2 != "keine") {
-            classVar2 <- df[input$inputSelect_Var2] %>% pull(1) %>% typeof()
+          var2Num <- input$inputSelect_Var2 %in% names(df %>% select_if(is.numeric))
         }
 
         
         ######################### Single Variable - numerisch ################################
         
-        if(input$inputSelect_Var2 == "keine" & classVar1 == "double") {
+        if(input$inputSelect_Var2 == "keine" & var1Num) {
             
           # Density Plot oder Histogramm
           if(input$inputCheck_Density) {
@@ -52,19 +52,17 @@ shinyServer(function(input, output, session) {
           }
         } 
         
-        
         ######################### Single Variable - kategorial ################################
         
-        else if (input$inputSelect_Var2 == "keine" & classVar1 == "character"){
+        else if (input$inputSelect_Var2 == "keine" & !var1Num){
             
           p <- generateBaseBarPlot(df, var, varFill, input$inputSelect_fill,
                                   palette, input$inputCheck_rmNA)
         }
         
-        
         ######################### double Variable - kategorial ################################
         
-        else if(input$inputSelect_Var2 != "keine" & classVar2 == "character" & classVar1 == "character") {
+        else if(input$inputSelect_Var2 != "keine" & !var2Num & !var1Num) {
             
           p <- generateBaseHeatmap(df, var, var2, varFill, input$inputSelect_fill, input$inputCheck_rmNA)
             
@@ -72,9 +70,7 @@ shinyServer(function(input, output, session) {
         
         ######################### double Variable - kategorial/numerisch ################################
         
-        else if(input$inputSelect_Var2 != "keine" & 
-                (classVar2 == "character" & classVar1 == "double") | 
-                 classVar2 == "double" & classVar1 == "character") {
+        else if(input$inputSelect_Var2 != "keine" & (var2Num != var1Num)) {
           
           p <- generateBaseBoxPlot(df, var, var2, input$inputCheck_rmNA)
             
@@ -86,7 +82,8 @@ shinyServer(function(input, output, session) {
 
           p <- generateBaseScatterplot(df, var, var2, varFill, input$inputSelect_fill, palette)
             
-        }
+        } 
+        
         
         # Achsen wechseln, wenn geüwünscht
         if(input$inputCheck_FlipCoord) {
