@@ -7,6 +7,7 @@ library(tidyverse)
 library(summarytools)
 library(RColorBrewer)
 library(kableExtra)
+source("lib.R")
 
 # Daten einlesen aus Excel Datei
 
