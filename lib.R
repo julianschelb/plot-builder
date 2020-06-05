@@ -135,6 +135,55 @@ generateBaseBarPlot <- function(df, var, varFill, inputSelect_fill, palette, inp
   return(p)
 }
 
+# Pie Chart ----------------------------------------------------
+
+generateBasePieChart <- function(df, var, palette, inputCheck_rmNA) {
+  
+    dfGrouped <- df %>% 
+      group_by(!!var) %>% 
+      summarise(n = n())  
+    
+    dfGrouped <- dfGrouped %>% 
+      mutate(perc = n / sum(dfGrouped$n))
+  
+  # NA Werte entfernen, wenn gewünscht
+  if (inputCheck_rmNA) {
+    dfGrouped <- dfGrouped %>% drop_na()
+  }
+  
+  p <- dfGrouped %>% 
+    ggplot(aes(x="", y = perc, fill=reorder(!!var, -perc)))+
+      geom_bar(width = 1, stat = "identity")+
+      coord_polar("y")
+  
+  # geignete Farbpalette ertstellen
+  colourCount = df %>% distinct(!!var) %>% pull(1) %>% length()
+  getPalette = colorRampPalette(brewer.pal(colourCount, palette))
+
+  p <- p + scale_fill_manual(values = getPalette(colourCount),
+                        na.translate = TRUE, na.value = "grey")
+  
+  #   
+  # # Plot erstellen
+  # p <- dfGrouped %>%
+  #   ggplot(aes(x = reorder(!!var, -n), y = n))
+  # 
+  # # Fill, wenn definiert
+  # if(inputSelect_fill == "keine") {
+  #   p <- p + geom_col(fill = "#1F78B4")
+  # } else{
+  #   
+  #   # geignete Farbpalette ertstellen
+  #   colourCount = df %>% distinct(!!varFill) %>% pull(1) %>% length()
+  #   getPalette = colorRampPalette(brewer.pal(colourCount, palette))
+  #   
+  #   p <- p + geom_col(aes(fill = !!varFill)) +
+  #     scale_fill_manual(values = getPalette(colourCount), 
+  #                       na.translate = TRUE, na.value = "grey")
+  #}
+  return(p)
+}
+
 
 # Heatmap -----------------------------------------------------------------
 

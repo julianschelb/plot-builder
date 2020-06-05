@@ -55,9 +55,14 @@ shinyServer(function(input, output, session) {
         ######################### Single Variable - kategorial ################################
         
         else if (input$inputSelect_Var2 == "keine" & !var1Num){
-            
-          p <- generateBaseBarPlot(df, var, varFill, input$inputSelect_fill,
-                                  palette, input$inputCheck_rmNA)
+          
+          if(!input$inputCheck_Pie) {
+            p <- generateBaseBarPlot(df, var, varFill, input$inputSelect_fill,
+                                    palette, input$inputCheck_rmNA)
+          } else {
+            p <- generateBasePieChart(df, var, palette, input$inputCheck_rmNA)
+          } 
+          
         }
         
         ######################### double Variable - kategorial ################################
@@ -108,17 +113,34 @@ shinyServer(function(input, output, session) {
             p <- p + facet_wrap(as.formula(paste("~", varFacet))) 
         }    
         
-        # Je nach Auswahl wird das entsprechende Theme angewendet
-        if (theme == "classic")      p <- p + theme_classic()
-        if (theme == "schwarz-weiß") p <- p + theme_bw()
-        if (theme == "light")        p <- p + theme_light()
-        if (theme == "minimal")      p <- p + theme_minimal()
-        
-        # Position der Legende und Rotation der Achsenbeschriftung anpassen
-        p <- p + theme(legend.position=input$inputSelect_legendPosition,
-                       axis.text.x = element_text(angle=as.numeric(input$inputSelect_xLabelRotation), hjust = 1),
-                       axis.text.y = element_text(angle=as.numeric(input$inputSelect_yLabelRotation))
-                       )
+        if(input$inputSelect_Var2 == "keine" & !var1Num & input$inputCheck_Pie) {
+          
+          # Position der Legende und Rotation der Achsenbeschriftung anpassen
+          p <- p + theme_minimal() +
+            theme(
+              axis.title.x = element_blank(),
+              axis.title.y = element_blank(),
+              panel.border = element_blank(),
+              axis.text.x=element_blank(),
+              panel.grid=element_blank(),
+              axis.ticks = element_blank(),
+              plot.title=element_text(size=14, face="bold")
+            )
+        } else{
+          
+          # Je nach Auswahl wird das entsprechende Theme angewendet
+          if (theme == "classic")      p <- p + theme_classic()
+          if (theme == "schwarz-weiß") p <- p + theme_bw()
+          if (theme == "light")        p <- p + theme_light()
+          if (theme == "minimal")      p <- p + theme_minimal()
+          
+          # Position der Legende und Rotation der Achsenbeschriftung anpassen
+          p <- p + theme(legend.position=input$inputSelect_legendPosition,
+                         axis.text.x = element_text(angle=as.numeric(input$inputSelect_xLabelRotation), hjust = 1),
+                         axis.text.y = element_text(angle=as.numeric(input$inputSelect_yLabelRotation))
+          )
+        }
+
         
         # Ausgabe des Plots
         p

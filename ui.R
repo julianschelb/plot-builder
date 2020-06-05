@@ -80,6 +80,7 @@ ui <- fluidPage(
                 )
             ),
             checkboxInput("inputCheck_Density", label = "Density Plot anstelle Histogramm", value = FALSE),
+            checkboxInput("inputCheck_Pie", label = "Pie Plot anstelle Balkendiagramm", value = FALSE),
             hr(),
             textInput("inputText_Title", "Titel"),
             textInput("inputText_Subtitle", "Untertitel"),
