@@ -7,7 +7,19 @@ library(tidyverse)
 library(summarytools)
 library(RColorBrewer)
 library(kableExtra)
+library(treemapify)
+library(shiny)
+library(shinycssloaders)
+
+# Für Senkey Diagramm
+library(viridis)
+library(patchwork)
+library(hrbrthemes)
+library(circlize)
+library(networkD3)
+
 source("lib.R")
+
 
 # Daten einlesen aus Excel Datei
 
@@ -19,6 +31,7 @@ if (file.exists("../data/Daten.xlsx")) {
 
 # Globale Listen definieren
 listVars <- colnames(df)
+listVarsChar <- colnames(df %>% select_if(~!is.numeric(.)))
 listThemes <- c("classic", "schwarz-weiß", "minimal", "light", "default")
 listColorPalettes <- rownames(brewer.pal.info)
 listStat <- c("sum", "mean")
