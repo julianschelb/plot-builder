@@ -20,8 +20,6 @@ library(circlize)
 library(networkD3)
 library(plotly)
 
-source("lib.R")
-
 
 # Daten einlesen aus Excel Datei
 
